@@ -18,6 +18,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController dateOfBirthController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   DateTime _selectedDate = DateTime.now();
+  // Example for Simran
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ class _ProfileState extends State<Profile> {
                           if (value!.isEmpty) {
                             return 'Please enter first name';
                           }
-                          if (RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+                          if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
                             return 'First name should only contain alphabets and spaces';
                           }
                           if (value.length > 15) {
@@ -116,13 +117,13 @@ class _ProfileState extends State<Profile> {
                         controller: lastNameController,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter first name';
+                            return 'Please enter last name';
                           }
-                          if (RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-                            return 'First name should only contain alphabets and spaces';
+                          if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+                            return 'Last name should only contain alphabets and spaces';
                           }
                           if (value.length > 15) {
-                            return 'First name length should be less than 15';
+                            return ('Last name length should be less than 15');
                           }
                           return null;
                         },
@@ -237,11 +238,11 @@ class _ProfileState extends State<Profile> {
                           if (value!.isEmpty) {
                             return 'Please enter your country';
                           }
-                          if (RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-                            return 'First name should only contain alphabets and spaces';
+                          if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+                            return 'Country name should only contain alphabets and spaces';
                           }
                           if (value.length > 15) {
-                            return 'First name length should be less than 15';
+                            return 'Country name length should be less than 15';
                           }
                           return null;
                         },
