@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:faramproduct/drawer.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Profile extends StatefulWidget {
@@ -19,6 +23,26 @@ class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
   DateTime _selectedDate = DateTime.now();
   // Example for Simran
+   late File? selectedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedImage = null;
+    init();
+  }
+
+
+  init() async {
+    String profileLogo = await getDataFromSession('profileLogoPath');
+    profileLogo = profileLogo.replaceAll("File: '", "").replaceAll("'", "");
+    File path = File( profileLogo );
+    setState(() {
+      selectedImage = path;
+    });
+    print(profileLogo);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +87,24 @@ class _ProfileState extends State<Profile> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: const Image(
-                  image: AssetImage("assets/images/logo.png"),
-                  height: 200,
-                  width: 200,
+              GestureDetector(
+                onTap: (){
+                  _pickFromgallery();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child:
+                      selectedImage == null ? Image(
+                        image: AssetImage("assets/images/logo.png"),
+                        height: 200,
+                        width: 200,
+                      ):
+                  Image.file(
+                    selectedImage!,
+                    height: 200,
+                    width: 200,
+                  )
+
                 ),
               ),
               Form(
@@ -230,6 +266,7 @@ class _ProfileState extends State<Profile> {
                             )),
                       ),
                     ),
+
                     Container(
                       padding: const EdgeInsets.fromLTRB(24, 10, 24, 10),
                       child: TextFormField(
@@ -296,6 +333,37 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
+
+  // Store data in session
+  void storeDataInSession(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
+  }
+
+  // Retrieve data from session
+  Future<String> getDataFromSession(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key) ?? ''; // Return an empty string if the key is not found
+  }
+
+
+
+
+  Future<void> _pickFromgallery() async {
+  FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+  if (result != null) {
+    File file = File(result.files.single.path.toString());
+    setState(() {
+      selectedImage = file;
+      storeDataInSession('profileLogoPath', selectedImage.toString());
+    });
+  } else {
+    // User canceled the picker
+  }
+}
+
 
  void _selectDate(context) async {
     final DateTime? picked = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1900), lastDate: DateTime.now());

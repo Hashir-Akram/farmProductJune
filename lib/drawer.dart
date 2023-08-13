@@ -53,7 +53,7 @@ Widget appDrawer(BuildContext context){
           leading: Icon(Icons.info_outline_rounded,color: Colors.black),
           title: Text("About"),
           onTap: (){
-            print("Profile");
+            Navigator.push(context, MaterialPageRoute(builder: (context) => About()));
           },
         ),
         ListTile(

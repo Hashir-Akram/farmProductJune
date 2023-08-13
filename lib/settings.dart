@@ -12,6 +12,18 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  bool darkMode = false;
+  bool showNotification = false;
+  String selectedlanguages = "";
+
+
+  final List<Map<String, String>> languages = [
+    {'code': 'en', 'name': 'English'},
+    {'code': 'hi', 'name': 'Hindi'},
+    // Add more languages as needed
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,45 +43,103 @@ class _SettingsState extends State<Settings> {
         children: [
           Container(
             child: Text("Preferences".toUpperCase(),style: TextStyle(
-              color: Colors.black87,fontWeight: FontWeight.w500,letterSpacing: 0.3,
+              color: Colors.black87,fontWeight: FontWeight.w500,letterSpacing: 0.3,fontSize: 20
             ),),
           ),
           Container(
-            padding: EdgeInsets.only(top: 16, bottom: 4),
+            padding: EdgeInsets.only(top: 16, bottom: 4,left: 5,right: 5),
             child: IntrinsicHeight(
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("Dark Mode",
-                            ),
-                        Container(
-                            margin: EdgeInsets.only(top: 4),
-                            child: Text("Save battery Power",
-                            )),
-                      ],
-                    ),
-                  ),
-                  VerticalDivider(
-                    color: Colors.black38,
-                    thickness: 1.2,
-                  ),
-                  Switch(
-                    onChanged: (bool value) async {
-                      setState(() {
-                        // _showNotification = value;
-                      });
-                    },
-                    // value: _showNotification,
-                    activeColor: Colors.blue, value: true,
-                  )
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Show Notification",style: TextStyle(
+                        fontWeight: FontWeight.w600,fontSize: 16
+                      ),),
+                      Padding(padding: EdgeInsets.fromLTRB(0, 5,0, 0),child: Text("Enable/Disable Mobile Notification",style: TextStyle(),))
+                    ],
+                  )),
+                  VerticalDivider(color: Colors.grey,),
+                  Switch(value: showNotification,activeColor: Colors.blue, onChanged: (value){
+                    setState(() {
+                      showNotification = value;
+                    });
+
+                  })
                 ],
               ),
-            ),
+            )
+          ),
+
+
+          Container(
+              padding: EdgeInsets.only(top: 16, bottom: 4,left: 5,right: 5),
+              child: IntrinsicHeight(
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Dark Mode",style: TextStyle(
+                            fontWeight: FontWeight.w600,fontSize: 16
+                        )),
+                        Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0), child: Text("Save battery Power"))
+                      ],
+                    )),
+                    VerticalDivider(color: Colors.grey,),
+                    Switch(value: darkMode,activeColor: Colors.blue, onChanged: (value){
+                      setState(() {
+                        darkMode = value;
+                      });
+
+                    })
+                  ],
+                ),
+              )
+          ),
+
+
+          Container(
+              padding: EdgeInsets.only(top: 16, bottom: 4,left: 5,right: 5),
+              child: IntrinsicHeight(
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Language",style: TextStyle(
+                            fontWeight: FontWeight.w600,fontSize: 16
+                        )),
+                        Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0),child: Text("Chose Your language "))
+                      ],
+                    )),
+                    Expanded(
+                      child: DropdownButtonFormField(items: languages.map((languages) {
+                        return DropdownMenuItem<String>(
+                          value: languages["code"],
+                          child: Text(
+                              '${languages["code"]} (${languages["name"]})'),
+                        );
+                      }).toList(), onChanged: (value){
+                        setState(() {
+                          selectedlanguages = value!;
+                        });
+          },
+                      borderRadius: BorderRadius.circular(8),hint: Text("Select Language")),
+                    )
+                  ],
+                ),
+              )
           ),
 
         ],
