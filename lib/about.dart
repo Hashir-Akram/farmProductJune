@@ -1,5 +1,4 @@
 import 'package:faramproduct/drawer.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class About extends StatefulWidget {
@@ -17,16 +16,6 @@ class _AboutState extends State<About> {
         centerTitle: true,
         title: const Text("About"),
         backgroundColor: Colors.blue,
-        actions: [
-          GestureDetector(
-            child: const Icon(Icons.notifications_active_outlined),
-            onTap: () {
-              if (kDebugMode) {
-                print("Bell Pressed");
-              }
-            },
-          )
-        ],
       ),
       drawer: appDrawer(context),
       body: SingleChildScrollView(
@@ -63,14 +52,13 @@ class _AboutState extends State<About> {
                 padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
                 child: const Text("Developed in 2023",
                     style:
-                        TextStyle(color: Colors.black54, letterSpacing: 0.3)),
+                        TextStyle(letterSpacing: 0.3)),
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
                 alignment: AlignmentDirectional.centerEnd,
                 child: const Text(
                   "- for June Batch",
-                  style: TextStyle(color: Colors.black54),
                 ),
               )
             ],
