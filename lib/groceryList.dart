@@ -14,7 +14,6 @@ class GroceryList extends StatefulWidget {
 }
 
 class _GroceryListState extends State<GroceryList> {
-  TextEditingController searchController = TextEditingController();
   bool isFiltering = false;
   String? selectedCategory;
   List<Widget> filteredItems = [];
@@ -29,8 +28,7 @@ class _GroceryListState extends State<GroceryList> {
     categories = {
       "Vegetable": [
         _buildProductItem("Broccoli", "assets/images/veg/barocoli.png", 100),
-        _buildProductItem(
-            "Bell Pepper", "assets/images/veg/bellpaper.png", 180),
+        _buildProductItem("Bell Pepper", "assets/images/veg/bellpaper.png", 180),
         _buildProductItem("Cabbage", "assets/images/veg/cabbage.png", 80),
         _buildProductItem("Onion", "assets/images/veg/onion.png", 110),
         _buildProductItem("Tomato", "assets/images/veg/tomato.png", 70),
@@ -45,8 +43,7 @@ class _GroceryListState extends State<GroceryList> {
       "Spices": [
         _buildProductItem("Cardamom", "assets/images/spices/cardamom.png", 90),
         _buildProductItem("Clove", "assets/images/spices/clove.png", 180),
-        _buildProductItem(
-            "Coriander", "assets/images/spices/coriander.png", 160),
+        _buildProductItem("Coriander", "assets/images/spices/coriander.png", 160),
         _buildProductItem("Mustard", "assets/images/spices/musted.png", 150),
         _buildProductItem("Pepper", "assets/images/spices/pepper.png", 90),
       ],
@@ -59,10 +56,8 @@ class _GroceryListState extends State<GroceryList> {
       ],
       "Flowers": [
         _buildProductItem("Daisy", "assets/images/flowers/daisy.jpg", 90),
-        _buildProductItem(
-            "Elder Flower", "assets/images/flowers/elderflower.jpg", 60),
-        _buildProductItem(
-            "Hibiscus", "assets/images/flowers/hibiscus.jpg", 100),
+        _buildProductItem("Elder Flower", "assets/images/flowers/elderflower.jpg", 60),
+        _buildProductItem("Hibiscus", "assets/images/flowers/hibiscus.jpg", 100),
         _buildProductItem("Lavender", "assets/images/flowers/lavender.jpg", 50),
         _buildProductItem("Rose", "assets/images/flowers/rose.jpg", 150),
       ],
@@ -71,18 +66,14 @@ class _GroceryListState extends State<GroceryList> {
         _buildProductItem("Millet", "assets/images/grains/millet.jpg", 180),
         _buildProductItem("Oats", "assets/images/grains/oats.webp", 160),
         _buildProductItem("Rice", "assets/images/grains/rice.jpg", 150),
-        _buildProductItem(
-            "Wheat Flour", "assets/images/grains/wheat_flour.jpg", 90),
+        _buildProductItem("Wheat Flour", "assets/images/grains/wheat_flour.jpg", 90),
       ],
       "Pulses": [
-        _buildProductItem(
-            "Black Beans", "assets/images/pulses/black_beans.webp", 90),
+        _buildProductItem("Black Beans", "assets/images/pulses/black_beans.webp", 90),
         _buildProductItem("Chickpea", "assets/images/pulses/chickpea.jpg", 180),
-        _buildProductItem(
-            "Kidney Beans", "assets/images/pulses/kidney_beans.webp", 160),
+        _buildProductItem("Kidney Beans", "assets/images/pulses/kidney_beans.webp", 160),
         _buildProductItem("Lentils", "assets/images/pulses/lentils.webp", 150),
-        _buildProductItem(
-            "Moong Beans", "assets/images/pulses/moong_beans.jpg", 90),
+        _buildProductItem("Moong Beans", "assets/images/pulses/moong_beans.jpg", 90),
       ],
     };
   }
