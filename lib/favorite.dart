@@ -106,7 +106,8 @@ class FavoritePageState extends State<FavoritePage> {
       );
     }
 
-    final itemsToRemove = selectedItems.map((index) => favoriteItems[index]).toList();
+    final itemsToRemove =
+        selectedItems.map((index) => favoriteItems[index]).toList();
 
     for (FavoriteItem item in itemsToRemove) {
       await dbHelper.deleteFavoriteItem(item.name);
@@ -125,26 +126,28 @@ class FavoritePageState extends State<FavoritePage> {
 
   Future<bool> _showAddToCartAgainDialog(String itemName) async {
     return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Add to Cart"),
-        content: Text("'$itemName' is already in the cart. Do you want to add it again?"),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(false); // Do not add it again
-            },
-            child: const Text("No"),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Add to Cart"),
+            content: Text(
+                "'$itemName' is already in the cart. Do you want to add it again?"),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: const Text("No"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text("Yes"),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(true); // Add it again
-            },
-            child: const Text("Yes"),
-          ),
-        ],
-      ),
-    ) ?? false; // Default to false if the dialog is dismissed
+        ) ??
+        false; // Default to false if the dialog is dismissed
   }
 
   // Remove selected items from favorites
@@ -156,7 +159,7 @@ class FavoritePageState extends State<FavoritePage> {
       await dbHelper.deleteFavoriteItem(item.name);
     }
     favoriteItems.removeWhere(
-            (item) => selectedItems.contains(favoriteItems.indexOf(item)));
+        (item) => selectedItems.contains(favoriteItems.indexOf(item)));
     selectedItems.clear();
     selectAll = false;
 
@@ -165,7 +168,8 @@ class FavoritePageState extends State<FavoritePage> {
 
   // Check if all items are selected
   bool _areAllItemsSelected() {
-    return favoriteItems.isNotEmpty && selectedItems.length == favoriteItems.length;
+    return favoriteItems.isNotEmpty &&
+        selectedItems.length == favoriteItems.length;
   }
 
   @override
@@ -208,7 +212,8 @@ class FavoritePageState extends State<FavoritePage> {
                   ElevatedButton(
                     onPressed: _removeFromFavoritesSelectedItems,
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
                     ),
                     child: const Text("Remove from Favorites"),
                   ),
@@ -279,14 +284,52 @@ class FavoritePageState extends State<FavoritePage> {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListTile(
-        title: Text(item.name),
-        subtitle: Text('\$${item.price.toStringAsFixed(2)}'),
-        leading: Image.asset(item.imagePath, height: 50, width: 50),
-        trailing: isSelected
-            ? const Icon(Icons.check_circle, color: Colors.green)
-            : null,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductPreview.fromFavorite(
+                favoriteItem: item,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Checkbox(
+                checkColor: Colors.blue,
+                activeColor: Colors.white,
+                value: isSelected,
+                onChanged: (value) {
+                  setState(() {
+                    isSelected = value ?? false;
+                    if (isSelected) {
+                      selectedItems.add(index);
+                    } else {
+                      selectedItems.remove(index);
+                    }
+                  });
+                },
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(item.name),
+                    Text('\$${item.price.toStringAsFixed(2)}'),
+                  ],
+                ),
+              ),
+              Image.asset(item.imagePath, height: 50, width: 50),
+            ],
+          ),
+        ),
       ),
     );
   }
+
 }

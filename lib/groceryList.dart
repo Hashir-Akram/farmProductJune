@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../services/dbhelper.dart';
 import 'drawer.dart';
 import '../model/userTable.dart';
+import 'model/filter.dart';
 
 class GroceryList extends StatefulWidget {
   const GroceryList({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class GroceryList extends StatefulWidget {
 
 class _GroceryListState extends State<GroceryList> {
   bool isFiltering = false;
-  String? selectedCategory;
+  Set<String> selectedCategories = {};
   List<Widget> filteredItems = [];
 
   // Define categories and their corresponding product lists
@@ -27,8 +28,9 @@ class _GroceryListState extends State<GroceryList> {
 
     categories = {
       "Vegetable": [
-        _buildProductItem("Broccoli", "assets/images/veg/barocoli.png", 100),
-        _buildProductItem("Bell Pepper", "assets/images/veg/bellpaper.png", 180),
+        _buildProductItem("Broccoli", "assets/images/veg/broccoli.png", 100),
+        _buildProductItem(
+            "Bell Pepper", "assets/images/veg/bellpaper.png", 180),
         _buildProductItem("Cabbage", "assets/images/veg/cabbage.png", 80),
         _buildProductItem("Onion", "assets/images/veg/onion.png", 110),
         _buildProductItem("Tomato", "assets/images/veg/tomato.png", 70),
@@ -43,8 +45,9 @@ class _GroceryListState extends State<GroceryList> {
       "Spices": [
         _buildProductItem("Cardamom", "assets/images/spices/cardamom.png", 90),
         _buildProductItem("Clove", "assets/images/spices/clove.png", 180),
-        _buildProductItem("Coriander", "assets/images/spices/coriander.png", 160),
-        _buildProductItem("Mustard", "assets/images/spices/musted.png", 150),
+        _buildProductItem(
+            "Coriander", "assets/images/spices/coriander.png", 160),
+        _buildProductItem("Mustard", "assets/images/spices/mustard.png", 150),
         _buildProductItem("Pepper", "assets/images/spices/pepper.png", 90),
       ],
       "Dairy Products": [
@@ -56,8 +59,10 @@ class _GroceryListState extends State<GroceryList> {
       ],
       "Flowers": [
         _buildProductItem("Daisy", "assets/images/flowers/daisy.jpg", 90),
-        _buildProductItem("Elder Flower", "assets/images/flowers/elderflower.jpg", 60),
-        _buildProductItem("Hibiscus", "assets/images/flowers/hibiscus.jpg", 100),
+        _buildProductItem(
+            "Elder Flower", "assets/images/flowers/elderflower.jpg", 60),
+        _buildProductItem(
+            "Hibiscus", "assets/images/flowers/hibiscus.jpg", 100),
         _buildProductItem("Lavender", "assets/images/flowers/lavender.jpg", 50),
         _buildProductItem("Rose", "assets/images/flowers/rose.jpg", 150),
       ],
@@ -66,14 +71,18 @@ class _GroceryListState extends State<GroceryList> {
         _buildProductItem("Millet", "assets/images/grains/millet.jpg", 180),
         _buildProductItem("Oats", "assets/images/grains/oats.webp", 160),
         _buildProductItem("Rice", "assets/images/grains/rice.jpg", 150),
-        _buildProductItem("Wheat Flour", "assets/images/grains/wheat_flour.jpg", 90),
+        _buildProductItem(
+            "Wheat Flour", "assets/images/grains/wheat_flour.jpg", 90),
       ],
       "Pulses": [
-        _buildProductItem("Black Beans", "assets/images/pulses/black_beans.webp", 90),
+        _buildProductItem(
+            "Black Beans", "assets/images/pulses/black_beans.webp", 90),
         _buildProductItem("Chickpea", "assets/images/pulses/chickpea.jpg", 180),
-        _buildProductItem("Kidney Beans", "assets/images/pulses/kidney_beans.webp", 160),
+        _buildProductItem(
+            "Kidney Beans", "assets/images/pulses/kidney_beans.webp", 160),
         _buildProductItem("Lentils", "assets/images/pulses/lentils.webp", 150),
-        _buildProductItem("Moong Beans", "assets/images/pulses/moong_beans.jpg", 90),
+        _buildProductItem(
+            "Moong Beans", "assets/images/pulses/moong_beans.jpg", 90),
       ],
     };
   }
@@ -109,43 +118,62 @@ class _GroceryListState extends State<GroceryList> {
         return false;
       },
       child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: const Text("Farm Product"),
-            backgroundColor: Colors.blue,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  _showFilterDialog();
-                },
-                icon: const Icon(Icons.filter_list_alt),
-              ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Farm Product"),
+          backgroundColor: Colors.blue,
+          actions: [
+            IconButton(
+              onPressed: () {
+                _showFilterDialog();
+              },
+              icon: const Icon(Icons.filter_list_alt),
+            ),
+          ],
+        ),
+        drawer: appDrawer(context),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (isFiltering)
+                _buildFilteredCategories()
+              else
+                _buildAllCategories(),
             ],
           ),
-          drawer: appDrawer(context),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                if (isFiltering)
-                  _buildFilteredCategories()
-                else
-                  _buildAllCategories(),
-              ],
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.blue,
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CartPage(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CartPage(),
+              ),
+              (route) => false,
+            );
+          },
+          child: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+        ),
+        bottomNavigationBar: isFiltering
+            ? Container(
+                padding: const EdgeInsets.only(left: 60, right: 60),
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedCategories.clear();
+                      isFiltering = false;
+                    });
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.orange,
                   ),
-                      (route) => false);
-            },
-            child:
-            const Icon(Icons.shopping_cart_outlined, color: Colors.white),
-          )),
+                  child: const Text("Clear Filters",
+                      style: TextStyle(color: Colors.white)),
+                ),
+              )
+            : null,
+      ),
     );
   }
 
@@ -160,13 +188,15 @@ class _GroceryListState extends State<GroceryList> {
   }
 
   Widget _buildFilteredCategories() {
-    if (selectedCategory != null) {
-      final products = categories[selectedCategory!];
-      if (products != null) {
-        return _buildProductCategory(selectedCategory!, products);
+    List<Widget> categoryWidgets = [];
+    categories.forEach((category, products) {
+      if (selectedCategories.contains(category)) {
+        categoryWidgets.add(_buildProductCategory(category, products));
       }
-    }
-    return const SizedBox.shrink();
+    });
+    return Column(
+      children: categoryWidgets,
+    );
   }
 
   Widget _buildProductCategory(String categoryName, List<Widget> products) {
@@ -275,39 +305,35 @@ class _GroceryListState extends State<GroceryList> {
   }
 
   void _showFilterDialog() {
+    Set<String> selectedFilters = Set<String>.from(selectedCategories);
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Filter Categories"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final category in categories.keys)
-                ListTile(
-                  title: Text(category),
-                  onTap: () {
-                    setState(() {
-                      selectedCategory = category;
-                      isFiltering = true;
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-              ListTile(
-                title: const Text("Show All"),
-                onTap: () {
-                  setState(() {
-                    selectedCategory = null;
-                    isFiltering = false;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+        return FilterDialog(
+          selectedFilters: selectedFilters,
+          categories: categories.keys.toList(),
+          onFilterChanged: (Set<String> newFilters) {
+            setState(() {
+              selectedCategories = newFilters;
+              isFiltering = selectedCategories.isNotEmpty;
+            });
+            Navigator.pop(context);
+            if (!isFiltering) {
+              _showNoFilterSelectedSnackBar();
+            }
+          },
         );
       },
+    );
+  }
+
+  void _showNoFilterSelectedSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("No filter items selected"),
+        duration: Duration(seconds: 2),
+      ),
     );
   }
 }

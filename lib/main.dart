@@ -28,16 +28,16 @@ final lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: Colors.blue, // Customize your light mode theme properties
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.all(Colors.white),
-      checkColor: MaterialStateProperty.all(Colors.white),
+      fillColor: MaterialStateProperty.all(Colors.black26),
+      checkColor: MaterialStateProperty.all(Colors.black26),
     ));
 
 final darkTheme = ThemeData(
     brightness: Brightness.dark,
     primaryColor: Colors.blue, // Customize your dark mode theme properties
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.all(Colors.white),
-      checkColor: MaterialStateProperty.all(Colors.white),
+      fillColor: MaterialStateProperty.all(Colors.black26),
+      checkColor: MaterialStateProperty.all(Colors.black26),
     ));
 
 class MyApp extends StatelessWidget {
